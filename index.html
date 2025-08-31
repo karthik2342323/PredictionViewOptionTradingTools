@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prediction View Finance Solution</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f4f8;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color: #4A90E2;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .navbar h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .menu-icon {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      right: -260px;
+      width: 250px;
+      height: 100%;
+      background-color: #4A90E2;
+      display: flex;
+      flex-direction: column;
+      padding-top: 60px;
+      transition: right 0.3s ease-in-out;
+      z-index: 999;
+    }
+
+    .nav-links.show {
+      right: 0;
+    }
+
+    .nav-links a {
+      color: white;
+      padding: 15px 20px;
+      text-decoration: none;
+      font-size: 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 22px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .container {
+      background: white;
+      padding: 25px 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      max-width: 400px;
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      color: #333;
+      font-size: 22px;
+    }
+
+    .license-status {
+      font-size: 14px;
+      margin-bottom: 20px;
+      color: #ff0000;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #888;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #888;
+    }    
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      background-color: #4A90E2;
+      color: white;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .result {
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease;
+    }
+
+    .result.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .result-box, .pairs-box {
+      background: #e8f0fe;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 17px;
+      color: #333;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+        /* Footer */
+    .footer {
+      background-color: #4A90E2;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: auto;
+    }
+
+    .footer p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px 15px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      .result-box, .pairs-box {
+        font-size: 15px;
+      }
+
+      button, input[type="number"] {
+        font-size: 15px;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ✅ Navbar -->
+  <div class="navbar">
+    <h1>Prediction View Option Trading Solutions</h1>
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+  </div>
+
+
+
+  <div class="nav-links" id="navLinks">
+    <div class="close-btn" onclick="toggleMenu()">✖</div>
+    <!--<a href="https://karthik2342323.github.io/PredictionViewOptionTrading/products.html">Products</a> -->
+    <!-- <a href="#">Prediction Derivative</a> -->
+    <!-- <a href="#">Prediction Equity</a> -->
+    <a href="#" onclick="showLicense()">License Activation</a>
+
+
+  </div>
+
+  <!-- ✅ Main Container -->
+<div id="licenseDetails" style="display: none; padding: 20px; text-align: center;">
+  <div class="container">
+    <h2>License Information</h2>
+    <p >Enter License Key to activate . Use provider license key to activate Option Trading tool </p>
+    <form id="licenseActivationForm">
+      <input type="text" id="ActivationKey" placeholder="Enter Activation key " required>
+      <button onclick="activateLicense()">Activate</button>
+    </form><br>    
+    <button onclick="closeLicense()">Close</button>
+  </div>
+</div>
+
+  
+  <div class="container">
+    <h2>Option trading prediction tool</h2>
+    <div class="license-status" id="licenseStatus"></div>
+
+    <form id="numberForm">
+      <input type="text" id="numberInput_IndexName" placeholder="Index name or equity F and O or crude oil f and o  " required>
+      <input type="text" id="numberInput_Option" placeholder="Enter Call or Put " required>
+      <input type="text" id="numberInput_Strike_rate" placeholder="Enter Strike Rate" required>
+      <input type="number" id="numberInput" placeholder="Enter price" required>
+      <button type="submit" id="submitBtn">Generate</button>
+    </form>
+
+    <div class="result" id="result">
+      <div class="result-box" id="resultBox1"></div>
+      <div class="result-box" id="resultBox2"></div>
+      <div class="pairs-box" id="pairBox"></div>
+    </div>
+  </div>
+
+
+
+  <!-- <script src="default.js"></script> -->
+
+
+
+  <script src="range.js"></script>
+
+
+
+
+
+  <script>
+
+
+
+/**
+ * 
+ * License details 
+ * 
+ * 
+ * Customer name : 
+ * 
+ * 
+ * version : basic
+ * 
+ *
+ * 
+
+
+
+
+*/
+
+
+
+
+/*
+
+Default
+
+
+Equity range
+
+A : 7
+B : 100
+
+Derivative
+
+A : 7
+B : 100
+
+*/
+
+
+//var derivative=[40,50];
+var derivative=[20,200];    
+var equity=[20,200];
+
+
+equity_range_A=equity[0];
+equity_range_B=equity[1];
+
+derivative_range_A=derivative[0];
+derivative_range_B=derivative[1];
+
+
+// license 1 year
+
+//const licenseExpiry = new Date("2027-07-06");
+
+// license 1 month
+
+var licenseExpiry_set = new Date("2024-09-20");
+var licenseIndividualName="  Marketing group Demo Version";
+var version="Basic";
+
+
+
+/*
+
+setup key
+
+
+list of keys
+
+
+setupKey=1,0
+
+equity_range_A
+equity_range_B
+
+derivative_range_A
+derivative_range_B
+
+
+
+
+
+*/
+
+/*
+const savedNum = localStorage.getItem("setupKey");
+
+if(savedNum)
+{
+
+
+}
+else
+{
+
+  console.log(" else ",savedNum);
+}
+*/
+
+
+
+
+/*
+
+
+Trained model version for license full access 
+
+
+fitting curve 
+
+pretrained 
+
+retest
+
+
+*/
+
+
+
+
+
+
+
+  </script> 
+
+  <!--  close -->
+
+
+
+
+
+
+
+
+  <script>
+
+
+
+    Module.onRuntimeInitialized = () => {
+      RangeForth = Module.cwrap('RangeForth', 'number', ['number','string']);
+      RangeBorth = Module.cwrap('RangeBorth', 'string', ['number']);
+
+    };
+
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('show');
+    }
+    function showLicense() {
+      // Close menu
+      document.getElementById("navLinks").classList.remove("show");
+      // Show license section
+      document.getElementById("licenseDetails").style.display = "block";
+    }
+
+  function activateLicense() {
+
+    //ActivationKey  
+
+      const ActivationKey=document.getElementById("ActivationKey").value;
+      //console.log(" activation key ",ActivationKey);
+
+      localStorage.setItem("activationKey", ActivationKey);
+
+  }   
+
+  function closeLicense() {
+    document.getElementById("licenseDetails").style.display = "none";
+  }    
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedNum = localStorage.getItem("lastNum");
+      if (savedNum) {
+        document.getElementById("numberInput").value = savedNum;
+      }
+      const license = localStorage.getItem("activationKey");
+      if (license) {
+        document.getElementById("ActivationKey").value = license;
+      }
+
+      const links = document.querySelectorAll(".nav-links a");
+      links.forEach(link => {
+        if (link.getAttribute("href") === window.location.pathname.split("/").pop()) {
+          link.classList.add("active");
+        }
+      });
+    });
+
+    //const licenseExpiry = new Date(localStorage.getItem("numberInput_License"));
+    const licenseExpiry = licenseExpiry_set;
+    const today = new Date();
+    const licenseValid = today <= licenseExpiry;
+
+    const licenseStatus = document.getElementById("licenseStatus");
+    const form = document.getElementById("numberForm");
+    const submitBtn = document.getElementById("submitBtn");
+
+    // setupKey
+    // localStorage.getItem("setupKey")
+
+    if(true)
+    {
+      /*
+      if (!licenseValid) {
+        licenseStatus.textContent = " License expired on "+licenseExpiry;
+        submitBtn.disabled = true;
+        document.getElementById("numberInput").disabled = true;
+      }
+      */
+    }
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+     // 
+      //const ActivationKey=document.getElementById("ActivationKey");
+      //console.log(" activation key ",ActivationKey);
+
+      const numInput = document.getElementById("numberInput");
+      const num = parseInt(numInput.value);
+      const result = document.getElementById("result");
+      const resultBox1 = document.getElementById("resultBox1");
+      const resultBox2 = document.getElementById("resultBox2");
+      const pairBox = document.getElementById("pairBox");
+
+
+      // web assembly
+      let ptr = RangeForth(num,localStorage.getItem("activationKey"));
+      let license_web_assembly=RangeBorth(num);
+
+      //--
+
+
+
+
+
+      if (isNaN(num)) {
+        resultBox1.textContent = "❗ Please enter a valid number.";
+        resultBox2.textContent = "";
+        pairBox.innerHTML = "";
+        result.classList.add("show");
+        return;
+      }
+
+
+     // license reset code
+      if(num==-255)
+      {
+        // custome code
+
+        resultBox1.textContent = " license valid till  "+licenseExpiry_set+" . This license belongs to "+licenseIndividualName+" . version "+version;
+        resultBox2.textContent = "web assembly license validation "+Module.HEAP32[(ptr >> 2) + 8]+" , "+Module.HEAP32[(ptr >> 2) + 9]+" , "+Module.HEAP32[(ptr >> 2) + 10]+" "+license_web_assembly;
+        pairBox.innerHTML = "";
+        result.classList.add("show");
+        return;
+
+       //
+      }
+
+
+      //if(num<derivative_range_A || num>derivative_range_B  )
+      if(num<Module.HEAP32[(ptr >> 2) + 11] || num>Module.HEAP32[(ptr >> 2) + 12]  )  
+      {
+        resultBox1.textContent = " Update Ur license allow range "+Module.HEAP32[(ptr >> 2) + 11]+" , "+Module.HEAP32[(ptr >> 2) + 12];
+        resultBox2.textContent = "web assembly license validation "+Module.HEAP32[(ptr >> 2) + 8]+" , "+Module.HEAP32[(ptr >> 2) + 9]+" , "+Module.HEAP32[(ptr >> 2) + 10]+" ";
+        pairBox.innerHTML = "";
+        result.classList.add("show");
+        return;
+      }
+
+
+      // Save number to localStorage
+      localStorage.setItem("lastNum", num);
+
+
+
+                  //let back=RangeBorth(num);
+
+      // web assembly remaining part
+
+      // Read the two ints from wasm memory
+      let forthA = Module.HEAP32[ptr >> 2];
+      let forthB = Module.HEAP32[(ptr >> 2) + 1];
+      
+
+      let forthC = Module.HEAP32[(ptr >> 2) + 2];
+      let forthD = Module.HEAP32[(ptr >> 2) + 3];
+
+      let backA = Module.HEAP32[(ptr >> 2) + 4];
+
+      let backB = Module.HEAP32[(ptr >> 2) + 5];
+
+      let backC = Module.HEAP32[(ptr >> 2) + 6];
+
+      let backD = Module.HEAP32[(ptr >> 2) + 7];
+      
+      //--
+
+
+
+
+
+
+
+
+      // Show result
+      //document.getElementById("output").innerText ="Forth Range: " + a + ", " + b+"  back range "+backA+" , "+backB;
+
+
+      console.log("",{forthA,forthB,forthC,forthD});
+      console.log("",{backA,backB,backC,backD});
+        
+
+      //---
+
+      let values = [forthA,forthB,forthC,forthD];
+
+      let back = [backA,backB,backC,backD];
+
+      //const values_copy=values;
+
+      resultBox1.textContent = `Prediction Range : ${values.join(", ")}`;
+      resultBox2.textContent = `Back range : ${back.join(", ")}`;
+
+      //values = [num,backA,backB,backC,backD]
+      values = [num,forthA,forthB,forthC,forthD]
+
+      // Buy-Sell Pairs
+      let pairHTML = "<strong>Option buy sell :</strong><br><br>";
+      for (let i = 0; i < values.length - 1; i++) {
+        pairHTML += `<div>Buy : ${values[i]} , Sell : ${values[i+1]} </div>`;
+      }
+      pairBox.innerHTML = pairHTML;
+
+
+
+      result.classList.add("show");
+    });
+  </script>
+
+
+
+<!--
+
+
+
+  <div style="padding:20px; text-align:center;">
+    <p>Product name  ,   Sensex , Nifty , Crude Oil CALL PUT range 20 - 100 predictive tool , ML trained model</p>
+    <p>Price 200 rs</p>
+    <p>Payment details</p>
+    <img src="6143240677685839835.jpg" height="300" width="300" alt="Image">
+
+<p>Payment steps </p> 
+<p> 1) Scan QR code and Send 200 rs </p>
+
+<p align="center">2) Send payment screenshot to whatsapp +91 9699244705 </p>
+
+<p>3) product will be delivered to whatsapp no after successfull payment   Sensex , Nifty , Crude Oil CALL PUT , range 20 - 100 </p>
+  </div>
+
+
+-->
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 Prediction View Option Trading Solutions</p>
+    <p>All Rights Reserved</p>
+  </footer>
+
+</body>
+</html>
